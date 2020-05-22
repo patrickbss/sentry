@@ -3,7 +3,10 @@ import styled from '@emotion/styled';
 
 import {addErrorMessage, addSuccessMessage} from 'app/actionCreators/indicator';
 import {openModal} from 'app/actionCreators/modal';
-import {installSentryApp, uninstallSentryApp } from 'app/actionCreators/sentryAppInstallations';
+import {
+  installSentryApp,
+  uninstallSentryApp,
+} from 'app/actionCreators/sentryAppInstallations';
 import Button from 'app/components/button';
 import CircleIndicator from 'app/components/circleIndicator';
 import Confirm from 'app/components/confirm';
