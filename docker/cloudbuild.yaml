@@ -1,5 +1,12 @@
 steps:
-- name: 'gcr.io/kaniko-project/executor:v0.17.1'
+- name: 'gcr.io/kaniko-project/executor:v0.19.0'
+  args: [
+    '--cache=true',
+    '--destination=us.gcr.io/$PROJECT_ID/sentry-builder:$COMMIT_SHA',
+    '-f', './docker/builder.Dockerfile'
+  ]
+- name: 'us.gcr.io/$PROJECT_ID/sentry-builder:$COMMIT_SHA'
+- name: 'gcr.io/kaniko-project/executor:v0.19.0'
   args: [
     '--cache=true',
     '--build-arg', 'SOURCE_COMMIT=$COMMIT_SHA',
