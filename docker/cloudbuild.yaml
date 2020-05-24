@@ -6,6 +6,9 @@ steps:
     '-f', './docker/builder.Dockerfile'
   ]
 - name: 'us.gcr.io/$PROJECT_ID/sentry-builder:$COMMIT_SHA'
+  env: [
+    'SOURCE_COMMIT=$SOURCE_COMMIT'
+  ]
 - name: 'gcr.io/kaniko-project/executor:v0.19.0'
   args: [
     '--cache=true',
