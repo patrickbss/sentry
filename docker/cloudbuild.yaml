@@ -7,7 +7,7 @@ steps:
   ]
 - name: 'us.gcr.io/$PROJECT_ID/sentry-builder:$COMMIT_SHA'
   env: [
-    'SOURCE_COMMIT=$SOURCE_COMMIT'
+    'SOURCE_COMMIT=$COMMIT_SHA'
   ]
 - name: 'gcr.io/kaniko-project/executor:v0.19.0'
   args: [
