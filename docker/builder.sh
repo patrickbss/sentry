@@ -12,7 +12,6 @@ if [ ! -d "node_modules" ]; then
 fi
 echo "Populating node_modules cache..."
 cp -ur /js/node_modules/* ./node_modules/
-chmod -R +x ./bin
 
 export SENTRY_BUILD=${SOURCE_COMMIT:-unknown}
 export YARN_CACHE_FOLDER="$(mktemp -d)"
