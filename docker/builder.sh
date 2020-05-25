@@ -13,7 +13,6 @@ fi
 echo "Populating node_modules cache..."
 cp -ur /js/node_modules/* ./node_modules/
 
-export SENTRY_BUILD=${SOURCE_COMMIT:-unknown}
 export YARN_CACHE_FOLDER="$(mktemp -d)"
 python setup.py bdist_wheel
 rm -r "$YARN_CACHE_FOLDER"

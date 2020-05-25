@@ -1,8 +1,8 @@
 FROM python:2.7.16-slim-buster as sdist
 
 LABEL maintainer="oss@sentry.io"
-LABEL org.opencontainers.image.title="Sentry PyPI Wheel"
-LABEL org.opencontainers.image.description="PyPI Wheel Builder for Sentry"
+LABEL org.opencontainers.image.title="Sentry Wheel Builder"
+LABEL org.opencontainers.image.description="Python Wheel Builder for Sentry"
 LABEL org.opencontainers.image.url="https://sentry.io/"
 LABEL org.opencontainers.image.source="https://github.com/getsentry/sentry"
 LABEL org.opencontainers.image.vendor="Functional Software, Inc."
@@ -44,3 +44,8 @@ WORKDIR /workspace
 VOLUME ["/workspace/node_modules", "/workspace/build"]
 COPY docker/builder.sh /builder.sh
 ENTRYPOINT [ "/builder.sh" ]
+
+ARG SOURCE_COMMIT
+ENV SENTRY_BUILD=${SOURCE_COMMIT:-unknown}
+LABEL org.opencontainers.image.revision=$SOURCE_COMMIT
+LABEL org.opencontainers.image.licenses="https://github.com/getsentry/sentry/blob/${SOURCE_COMMIT:-master}/LICENSE"
