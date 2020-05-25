@@ -27,6 +27,7 @@ import getBreadcrumbTypeDetails from './getBreadcrumbTypeDetails';
 import BreadcrumbsListHeader from './breadcrumbsListHeader';
 import BreadcrumbsListBody from './breadcrumbsListBody';
 import BreadcrumbIcon from './breadcrumbIcon';
+import BreadcrumbLevel from './breadcrumbLevel';
 
 const MAX_CRUMBS_WHEN_COLLAPSED = 10;
 
@@ -104,7 +105,7 @@ class BreadcrumbsContainer extends React.Component<Props, State> {
   getFilterOptions = (breadcrumbs: Array<BreadcrumbWithDetails>): FilterOptions => {
     const types = this.getFilterTypes(breadcrumbs);
     const levels = this.getFilterLevels(types);
-    return [types, levels];
+    return [this.getFilterTypes(breadcrumbs), levels];
   };
 
   getFilterTypes = (breadcrumbs: Array<BreadcrumbWithDetails>) => {
@@ -112,10 +113,7 @@ class BreadcrumbsContainer extends React.Component<Props, State> {
 
     for (const index in breadcrumbs) {
       const breadcrumb = breadcrumbs[index];
-
-      const hasFilterType = filterTypes.findIndex(
-        filterType => filterType.type === breadcrumb.type
-      );
+      const hasFilterType = filterTypes.findIndex(f => f.type === breadcrumb.type);
 
       if (hasFilterType === -1) {
         filterTypes.push({
@@ -145,17 +143,15 @@ class BreadcrumbsContainer extends React.Component<Props, State> {
     for (const indexType in types) {
       for (const indexLevel in types[indexType].levels) {
         const level = types[indexType].levels[indexLevel];
-        const hasFilterLevel = filterLevels.findIndex(
-          filterLevel => filterLevel.type === level
-        );
+        const hasFilterLevel = filterLevels.some(f => f.type === level);
 
-        if (hasFilterLevel !== -1) {
+        if (hasFilterLevel) {
           continue;
         }
 
         filterLevels.push({
           type: level,
-          symbol: <BreadcrumbIcon {...omit(breadcrumb, 'description')} size="xs" />,
+          symbol: <BreadcrumbLevel level={level} />,
           isChecked: true,
         });
       }

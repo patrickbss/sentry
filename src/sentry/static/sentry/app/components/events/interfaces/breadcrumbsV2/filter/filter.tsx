@@ -78,6 +78,8 @@ class Filter extends React.Component<Props, State> {
   render() {
     const {options, checkedQuantity} = this.state;
 
+    console.log('options', options);
+
     if (options[0].length === 0 && options[1].length === 0) {
       return null;
     }
