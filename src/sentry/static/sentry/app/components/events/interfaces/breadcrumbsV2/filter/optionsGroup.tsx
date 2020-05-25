@@ -4,45 +4,39 @@ import styled from '@emotion/styled';
 import space from 'app/styles/space';
 import CheckboxFancy from 'app/components/checkboxFancy/checkboxFancy';
 
-import {FilterType, FilterGroupType, FilterGroup} from './types';
+import {Option} from './types';
 
 type Props = {
-  groupHeaderTitle: string;
-  data: Array<FilterGroup>;
-  onClick: (type: FilterType, groupType: FilterGroupType) => void;
+  title: string;
+  data: Array<Option>;
+  onClick: () => void;
 };
 
-const BreadcrumbFilterGroup = ({groupHeaderTitle, data, onClick}: Props) => {
-  const handleClick = (type: FilterType, groupType: FilterGroupType) => (
-    event: React.MouseEvent<HTMLLIElement>
-  ) => {
+const OptionsGroup = ({title, data, onClick}: Props) => {
+  const handleClick = () => (event: React.MouseEvent<HTMLLIElement>) => {
     event.stopPropagation();
-    onClick(type, groupType);
+    // onClick(type, groupType);
   };
 
   return (
     <div>
-      <FilterGroupHeader>{groupHeaderTitle}</FilterGroupHeader>
-      <FilterGroupList>
-        {data.map(({type, groupType, description, isChecked, symbol}) => (
-          <FilterGroupListItem
-            key={type}
-            isChecked={isChecked}
-            onClick={handleClick(type, groupType)}
-          >
+      <Header>{title}</Header>
+      <List>
+        {data.map(({type, description, isChecked, symbol}) => (
+          <ListItem key={type} isChecked={isChecked} onClick={handleClick()}>
             {symbol}
             <ListItemDescription>{description}</ListItemDescription>
             <CheckboxFancy isChecked={isChecked} />
-          </FilterGroupListItem>
+          </ListItem>
         ))}
-      </FilterGroupList>
+      </List>
     </div>
   );
 };
 
-export default BreadcrumbFilterGroup;
+export {OptionsGroup};
 
-const FilterGroupHeader = styled('div')`
+const Header = styled('div')`
   display: flex;
   align-items: center;
   margin: 0;
@@ -54,13 +48,13 @@ const FilterGroupHeader = styled('div')`
   border-bottom: 1px solid ${p => p.theme.borderDark};
 `;
 
-const FilterGroupList = styled('ul')`
+const List = styled('ul')`
   list-style: none;
   margin: 0;
   padding: 0;
 `;
 
-const FilterGroupListItem = styled('li')<{isChecked?: boolean}>`
+const ListItem = styled('li')<{isChecked?: boolean}>`
   display: grid;
   grid-template-columns: max-content 1fr max-content;
   grid-column-gap: ${space(1)};
