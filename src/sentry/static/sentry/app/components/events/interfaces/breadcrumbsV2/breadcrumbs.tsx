@@ -102,63 +102,66 @@ class BreadcrumbsContainer extends React.Component<Props, State> {
   };
 
   getFilterOptions = (breadcrumbs: Array<BreadcrumbWithDetails>): FilterOptions => {
-    const filterOptions: FilterOptions = [[], []];
+    const types = this.getFilterTypes(breadcrumbs);
+    const levels = this.getFilterLevels(types);
+    return [types, levels];
+  };
+
+  getFilterTypes = (breadcrumbs: Array<BreadcrumbWithDetails>) => {
+    const filterTypes: FilterOptions[0] = [];
 
     for (const index in breadcrumbs) {
-      const types = this.getFilterTypes(filterOptions[1], breadcrumbs[index]);
-      const levels = this.getFilterLevels(filterOptions[1], breadcrumbs[index]);
+      const breadcrumb = breadcrumbs[index];
 
-      filterOptions.push({
-        types,
-        levels,
-      });
+      const hasFilterType = filterTypes.findIndex(
+        filterType => filterType.type === breadcrumb.type
+      );
+
+      if (hasFilterType === -1) {
+        filterTypes.push({
+          type: breadcrumb.type,
+          description: breadcrumb.description,
+          symbol: <BreadcrumbIcon {...omit(breadcrumb, 'description')} size="xs" />,
+          levels: breadcrumb?.level ? [breadcrumb.level] : [],
+          isChecked: true,
+        });
+        continue;
+      }
+
+      if (
+        breadcrumb?.level &&
+        !filterTypes[hasFilterType].levels.includes(breadcrumb.level)
+      ) {
+        filterTypes[hasFilterType].levels.push(breadcrumb.level);
+      }
     }
 
-    return [[], []];
+    return filterTypes;
   };
 
-  getFilterTypes = (
-    filterOption: FilterOptions[0],
-    breadcrumb: BreadcrumbWithDetails
-  ) => {
-    const hasFilterOptionType = filterOption.find(f => f.type === breadcrumb.type);
+  getFilterLevels = (types: FilterOptions[0]) => {
+    const filterLevels: FilterOptions[1] = [];
 
-    if (!hasFilterOptionType) {
-      return {
-        type: breadcrumb.type,
-        description: breadcrumb.description,
-        symbol: <BreadcrumbIcon {...omit(breadcrumb, 'description')} size="xs" />,
-        levels: breadcrumb?.level ? [breadcrumb.level] : [],
-        isChecked: true,
-      };
+    for (const indexType in types) {
+      for (const indexLevel in types[indexType].levels) {
+        const level = types[indexType].levels[indexLevel];
+        const hasFilterLevel = filterLevels.findIndex(
+          filterLevel => filterLevel.type === level
+        );
+
+        if (hasFilterLevel !== -1) {
+          continue;
+        }
+
+        filterLevels.push({
+          type: level,
+          symbol: <BreadcrumbIcon {...omit(breadcrumb, 'description')} size="xs" />,
+          isChecked: true,
+        });
+      }
     }
 
-    // if (breadcrumb?.level && !hasFilterOptionType.levels.includes(breadcrumb.level)) {
-    //   hasFilterOptionType.levels.push(breadcrumb.level);
-    // }
-
-    return undefined;
-  };
-
-  getFilterLevels = (
-    filterOption: FilterOptions[1],
-    breadcrumb: BreadcrumbWithDetails
-  ) => {
-    if (!breadcrumb?.level) {
-      return undefined;
-    }
-
-    const hasFilterOptionLevel = filterOption.find(f => f.type === breadcrumb.level);
-
-    if (hasFilterOptionLevel) {
-      return undefined;
-    }
-
-    return {
-      type: breadcrumb.level,
-      symbol: <BreadcrumbIcon {...omit(breadcrumb, 'description')} size="xs" />,
-      isChecked: true,
-    };
+    return filterLevels;
   };
 
   moduleToCategory = (module: any) => {
